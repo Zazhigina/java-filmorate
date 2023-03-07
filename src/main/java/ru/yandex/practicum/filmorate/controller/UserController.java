@@ -3,7 +3,9 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -24,7 +26,35 @@ public class UserController {
 
     @PostMapping
     public User create(@RequestBody User user) throws ValidationException {
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
+        if (validation(user)) {
+            user.setId(idGenerator++);
+            users.add(user);
+            log.info(user.toString());
+            return user;
+        }
+        return user;
+    }
+
+    @PutMapping
+    public User put(@RequestBody User user) throws ValidationException {
+        if (validation(user)) {
+            for (User user1 : users) {
+                if (user1.getId() == user.getId()) {
+                    users.remove(user1);
+                    users.add(user);
+                    log.info(user.toString());
+                    return user;
+                } else {
+                    log.warn("Обновление не произошло");
+                    throw new ValidationException("Пользователя с id:" + user.getId() + "не существует");
+                }
+            }
+        }
+        return user;
+    }
+
+    boolean validation(User user) throws ValidationException {
+        if (!StringUtils.hasText(user.getEmail())) {
             log.warn("Неправильно ввели почту");
             throw new ValidationException("Адрес электронной почты не может быть пустым.");
         }
@@ -40,7 +70,7 @@ public class UserController {
             log.warn("Неправильно ввели почту");
             throw new ValidationException("Адрес электронной почты не содержит @.");
         }
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
+        if (!StringUtils.hasText(user.getLogin())) {
             log.warn("Логин пустой");
             throw new ValidationException("Логин не может быть пустым.");
         }
@@ -48,7 +78,7 @@ public class UserController {
             log.warn("Неправильно ввели логин");
             throw new ValidationException("Логин не может содержать пробелы.");
         }
-        if (user.getName() == null || user.getName().isEmpty()) {
+        if (!StringUtils.hasText(user.getName())) {
             log.warn("Не ввели имя,используется логин");
             user.setName(user.getLogin());
         }
@@ -56,25 +86,6 @@ public class UserController {
             log.warn("Не корректно ввели дату рождения");
             throw new ValidationException("Дата рождения не может быть в будущем");
         }
-        user.setId(idGenerator++);
-        users.add(user);
-        log.info(user.toString());
-        return user;
-    }
-
-    @PutMapping
-    public User put(@RequestBody User user) throws ValidationException {
-        for (User user1 : users) {
-            if (user1.getId() == user.getId()) {
-                users.remove(user1);
-                users.add(user);
-                log.info(user.toString());
-                return user;
-            }else {
-                log.warn("Обновление не произошло");
-                throw new ValidationException("Пользователя с id:"+ user.getId()+"не существует");
-            }
-        }
-        return user;
+        return true;
     }
 }

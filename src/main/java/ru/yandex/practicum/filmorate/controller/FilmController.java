@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import org.springframework.util.StringUtils;
 
 
 import java.time.LocalDate;
@@ -26,7 +27,35 @@ public class FilmController {
 
     @PostMapping
     public Film create(@RequestBody Film film) throws ValidationException {
-        if (film.getName() == null || film.getName().isBlank()) {
+        if (validation(film)) {
+            film.setId(idGenerator++);
+            films.add(film);
+            log.info("Добавили новый фильм {}", film.toString());
+            return film;
+        }
+        return film;
+    }
+
+    @PutMapping
+    public Film put(@RequestBody Film film) throws ValidationException {
+        if (validation(film)) {
+            for (Film film1 : films) {
+                if (film1.getId() == film.getId()) {
+                    films.remove(film1);
+                    films.add(film);
+                    log.info("Обновление фильма {}", film.toString());
+                    return film;
+                } else {
+                    log.warn("Обновление не произошло");
+                    throw new ValidationException("Фильма :" + film.getName() + "не существует");
+                }
+            }
+        }
+        return film;
+    }
+
+    boolean validation(Film film) throws ValidationException {
+        if (!StringUtils.hasText(film.getName())) {
             log.warn("Название фильма id: {} отсутствует ", film.getId());
             throw new ValidationException("Название фильма не может быть пустым.");
         }
@@ -45,25 +74,6 @@ public class FilmController {
             throw new ValidationException("В фильме " +
                     film.getName() + " продолжительность должна быть положительной");
         }
-        film.setId(idGenerator++);
-        films.add(film);
-        log.info("Добавили новый фильм {}", film.toString());
-        return film;
-    }
-
-    @PutMapping
-    public Film put(@RequestBody Film film) throws ValidationException {
-        for (Film film1 : films) {
-            if (film1.getId() == film.getId()) {
-                films.remove(film1);
-                films.add(film);
-                log.info("Обновление фильма {}", film.toString());
-                return film;
-            } else {
-                log.warn("Обновление не произошло");
-                throw new ValidationException("Фильма :" + film.getName() + "не существует");
-            }
-        }
-        return film;
+        return true;
     }
 }

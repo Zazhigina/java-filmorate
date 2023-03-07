@@ -7,11 +7,11 @@ import java.time.LocalDate;
 @Data
 public class Film {
 
-    private   int id; // идентификатор
-    private   String name; // Имя
-    private   String description; // описание
-    private   LocalDate releaseDate; // дата релиза
-    private   Integer duration; // продолжительность фильма
+    private   int id;
+    private   String name;
+    private   String description;
+    private   LocalDate releaseDate;
+    private   Integer duration;
 
 
     public Film( String name, String description, LocalDate releaseDate, Integer duration) {

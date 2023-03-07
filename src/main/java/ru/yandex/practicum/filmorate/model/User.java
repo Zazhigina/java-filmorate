@@ -8,11 +8,11 @@ import java.time.LocalDate;
 @Data
 public class User {
 
-    private  int id ; // идентификатор
-    private  String email; // почта
-    private  String login; // логин
-    private String name = null; // имя
-    private  LocalDate birthday; // дата рождения
+    private  int id ;
+    private  String email;
+    private  String login;
+    private String name = null;
+    private  LocalDate birthday;
 
     public User( String email, String login, LocalDate birthday) {
         this.email = email;
@@ -20,9 +20,5 @@ public class User {
         this.birthday = birthday;
     }
 
-
-    public void setName( final String name) {
-        this.name = name;
-    }
 
 }
