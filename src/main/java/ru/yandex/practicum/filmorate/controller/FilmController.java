@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.Film;
+
 import ru.yandex.practicum.filmorate.service.FilmService;
 
+
+import javax.validation.Valid;
 import java.util.*;
 
 @Slf4j
@@ -23,7 +26,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film createFilm(@RequestBody Film film) throws ValidationException {
+    public Film createFilm(@Valid @RequestBody Film film) throws ValidationException {
         return filmService.createFilm(film);
     }
 

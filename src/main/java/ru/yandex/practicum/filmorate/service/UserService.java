@@ -132,13 +132,7 @@ public class UserService {
             log.warn("Неправильно ввели почту");
             throw new ValidationException("Адрес электронной почты не может быть пустым.");
         }
-        for (User user1 : getUsers()) {
-            if (user1.getEmail().equals(user.getEmail())) {
-                log.warn("Неправильно ввели почту");
-                throw new ValidationException("Пользователь с электронной почтой " + user.getEmail() + " уже зарегистрирован.");
-            }
 
-        }
         if (!user.getEmail().contains("@")) {
             log.warn("Неправильно ввели почту");
             throw new ValidationException("Адрес электронной почты не содержит @.");
