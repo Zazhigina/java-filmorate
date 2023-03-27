@@ -22,14 +22,12 @@ public class UserService {
 
     public void addToFriends(int userId, int friendId) throws ValidationException {
         if (userNotExists(userId)) {
-            log.error("Ошибка в user service при добавлении в список друзей:" +
-                    " пользователь с id {} не найден.", userId);
+            log.error("Ошибка в user service при добавлении в список друзей:" + " пользователь с id {} не найден.", userId);
             throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
 
         if (userNotExists(friendId)) {
-            log.error("Ошибка в user service при добавлении в список друзей:" +
-                    " пользователь с id {} не найден.", friendId);
+            log.error("Ошибка в user service при добавлении в список друзей:" + " пользователь с id {} не найден.", friendId);
             throw new UserNotFoundException(String.format("Пользователь id: %s не найден!", friendId));
         }
 
@@ -40,8 +38,7 @@ public class UserService {
         for (User friend : userStorage.getFriends(userId)) {
             if (friend.getId() == friendId) {
                 log.debug("пользователь с id: {} уже имеет пользователя с id: {} в списке друзей", userId, friendId);
-                throw new ValidationException(String.format("Пользователь с id: %s  уже имеет пользователя с: %s " +
-                        "в списке друзей", userId, friendId));
+                throw new ValidationException(String.format("Пользователь с id: %s  уже имеет пользователя с: %s " + "в списке друзей", userId, friendId));
             }
         }
         userStorage.addFriend(userId, friendId);
@@ -60,8 +57,7 @@ public class UserService {
 
         if (userId == friendId) {
             log.debug("пытается удалить пользователей с таким же id в список друзей: id {}", userId);
-            throw new UserNotFoundException(String.format("Пользователь не может сам себя удалить из друзей," +
-                    " id: %s", userId));
+            throw new UserNotFoundException(String.format("Пользователь не может сам себя удалить из друзей," + " id: %s", userId));
         }
         userStorage.removeFromFriends(userId, friendId);
     }
@@ -89,8 +85,7 @@ public class UserService {
 
         if (userId == otherId) {
             log.debug("пытается найти общих друзей для пользователей с таким же id:: id {}", userId);
-            throw new ValidationException(String.format
-                    ("Пользователи с одинаковым идентификатором не могут быть друзьями, id: %s", userId));
+            throw new ValidationException(String.format("Пользователи с одинаковым идентификатором не могут быть друзьями, id: %s", userId));
         }
         return userStorage.getCommonFriends(userId, otherId);
     }
@@ -140,8 +135,7 @@ public class UserService {
         for (User user1 : getUsers()) {
             if (user1.getEmail().equals(user.getEmail())) {
                 log.warn("Неправильно ввели почту");
-                throw new ValidationException("Пользователь с электронной почтой " +
-                        user.getEmail() + " уже зарегистрирован.");
+                throw new ValidationException("Пользователь с электронной почтой " + user.getEmail() + " уже зарегистрирован.");
             }
 
         }

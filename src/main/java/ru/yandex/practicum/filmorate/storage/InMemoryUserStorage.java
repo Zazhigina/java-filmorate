@@ -96,16 +96,16 @@ public class InMemoryUserStorage implements UserStorage {
         ArrayList<User> commonFriends = new ArrayList<>();
         Optional<User> user = getUserById(userId);
         Set<Integer> friendsOfUser = new HashSet<>();
-        if (user.isPresent()){
+        if (user.isPresent()) {
             friendsOfUser = user.get().getFriends();
         }
         Optional<User> otherUser = getUserById(otherId);
         Set<Integer> friendsOfOtherUser = new HashSet<>();
-        if (otherUser.isPresent()){
+        if (otherUser.isPresent()) {
             friendsOfOtherUser = otherUser.get().getFriends();
         }
-        for (Integer commonUser : friendsOfUser ){
-            if (friendsOfOtherUser.contains(commonUser)){
+        for (Integer commonUser : friendsOfUser) {
+            if (friendsOfOtherUser.contains(commonUser)) {
                 Optional<User> userById = getUserById(commonUser);
                 userById.ifPresent(commonFriends::add);
             }

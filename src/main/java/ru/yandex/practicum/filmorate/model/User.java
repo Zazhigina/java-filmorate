@@ -23,7 +23,7 @@ public class User {
     private String email;
     @NotBlank
     private String login;
-    private String name ;
+    private String name;
     @Past
     private LocalDate birthday;
 
