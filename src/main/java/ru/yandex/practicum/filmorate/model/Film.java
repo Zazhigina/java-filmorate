@@ -31,6 +31,6 @@ public class Film {
 
     private int rate;
 
-    private final Set<Integer> likes = new HashSet<>() ;
+    private final Set<Integer> likes = new HashSet<>();
 
 }
