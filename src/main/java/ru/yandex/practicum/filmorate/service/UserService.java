@@ -9,8 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
-import java.util.HashSet;
+import java.time.LocalDate;;
 import java.util.List;
 import java.util.Optional;
 

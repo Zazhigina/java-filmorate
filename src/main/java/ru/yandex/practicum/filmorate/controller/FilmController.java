@@ -1,18 +1,16 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import org.springframework.util.StringUtils;
+
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
