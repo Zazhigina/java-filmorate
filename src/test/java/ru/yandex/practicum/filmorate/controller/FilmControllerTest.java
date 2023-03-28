@@ -66,6 +66,7 @@ public class FilmControllerTest {
         );
         assertEquals("Название фильма не может быть пустым.", ex.getMessage());
     }
+
     @Test
     void validationExceptionTrimNameFilm() throws ValidationException {
         film.setName("      ");
