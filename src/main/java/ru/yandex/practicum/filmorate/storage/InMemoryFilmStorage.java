@@ -30,7 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public Film modificationFilm(Film film) throws ValidationException {
+    public Film modificationFilm(Film film) {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
             log.info("Фильм с id {} обновлен. Фильм: {}", film.getId(), film);

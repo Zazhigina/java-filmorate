@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserStorage {
     User addUser(User user);
 
-    void modificationUser(User user) throws ValidationException;
+    void modificationUser(User user) ;
 
     Optional<User> getUserById(int userId);
 

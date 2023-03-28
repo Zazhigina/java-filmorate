@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -49,6 +49,27 @@ public class FilmControllerTest {
     @Test
     void validationExceptionNullNameFilm() throws ValidationException {
         film.setName(null);
+        ValidationException ex = assertThrows(
+
+                ValidationException.class,
+                () -> filmController.createFilm(film)
+        );
+        assertEquals("Название фильма не может быть пустым.", ex.getMessage());
+    }
+
+    @Test
+    void validationExceptionNameFilm() throws ValidationException {
+        film.setName("");
+        ValidationException ex = assertThrows(
+
+                ValidationException.class,
+                () -> filmController.createFilm(film)
+        );
+        assertEquals("Название фильма не может быть пустым.", ex.getMessage());
+    }
+    @Test
+    void validationExceptionTrimNameFilm() throws ValidationException {
+        film.setName("      ");
         ValidationException ex = assertThrows(
 
                 ValidationException.class,

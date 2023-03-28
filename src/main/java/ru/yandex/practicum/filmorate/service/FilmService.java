@@ -52,41 +52,33 @@ public class FilmService {
     }
 
     public void addLike(int filmId, int userId) throws ValidationException {
-        if (filmStorage.getFilms().stream().anyMatch(f -> f.getId() == filmId)) {
-            Optional<Film> filmById = filmStorage.getFilmById(filmId);
-            if (filmById.isPresent()) {
-                if (!(filmById.get().getLikes() == null)) {
-                    if (filmById.get().getLikes().contains(userId)) {
-                        log.error("Ошибка в film service при добавлений лайка пользователем id {} фильму c id {} уже был добавлен", userId, filmId);
-                        throw new ValidationException(String.format("Пользователь с id %s уже был добавлен лайк " +
-                                "фильму с id %s.", userId, filmId));
-                    }
-                }
+        validateFilmAndUser(filmId, userId);
+        Optional<Film> filmById = filmStorage.getFilmById(filmId);
+        if (filmById.isPresent()) {
+            if (filmById.get().getLikes().contains(userId)) {
+                log.error("Ошибка в film service при добавлений лайка пользователем id {} фильму c id {} уже был добавлен", userId, filmId);
+                throw new ValidationException(String.format("Пользователь с id %s уже был добавлен лайк " +
+                        "фильму с id %s.", userId, filmId));
             }
         }
-        for (Film film : filmStorage.getFilms()) {
-            if (filmId == film.getId()) {
-                filmStorage.addLike(filmId, userId);
-            }
-        }
+        filmStorage.addLike(filmId, userId);
     }
 
     public void removeLike(int filmId, int userId) throws ValidationException {
         validateFilmAndUser(filmId, userId);
-        for (Film film : filmStorage.getFilms()) {
-            if (filmId == film.getId()) {
-                if (!(film.getLikes().contains(userId))) {
-                    log.error("Ошибка в film service при удалении лайка пользователем id {} фильму c id {} лайк пользователя" +
-                            " в этом фильме нет ", userId, filmId);
-                    throw new ValidationException(String.format("Пользователь с id %s не ставил лайк " +
-                            "фильму с id %s.", userId, filmId));
-                } else {
-                    filmStorage.removeLike(filmId, userId);
-                }
+        Optional<Film> filmById = filmStorage.getFilmById(filmId);
+        if (filmById.isPresent()) {
+            if (!(filmById.get().getLikes().contains(userId))) {
+                log.error("Ошибка в film service при удалении лайка пользователем id {} фильму c id {} лайк пользователя" +
+                        " в этом фильме нет ", userId, filmId);
+                throw new ValidationException(String.format("Пользователь с id %s не ставил лайк " +
+                        "фильму с id %s.", userId, filmId));
+            } else {
+                filmStorage.removeLike(filmId, userId);
             }
-
         }
     }
+
 
     public List<Film> getPopularFilms(int count) throws ValidationException {
         if (count <= 0) {
@@ -127,12 +119,12 @@ public class FilmService {
 
     private void validateFilmAndUser(int filmId, int userId) {
         if (filmNotExists(filmId)) {
-            log.error("film service add like to film error: film with id {} was not found.", filmId);
-            throw new FilmNotFoundException(String.format("Film with id: %s was not found!", filmId));
+            log.error("user service получает фильм по ошибке: film с id {} не найден.", filmId);
+            throw new FilmNotFoundException(String.format("Фильм с id: %s не найден!", filmId));
         }
         if (!userExists(userId)) {
-            log.error("film service add like to film error: user with id {} was not found.", userId);
-            throw new UserNotFoundException(String.format("User with id: %s was not found!", userId));
+            log.error("user service получает пользователя по ошибке: user с id {} не найден.", userId);
+            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
     }
 

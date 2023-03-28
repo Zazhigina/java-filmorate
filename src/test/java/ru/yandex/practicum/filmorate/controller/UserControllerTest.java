@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate;
+package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,8 +46,32 @@ public class UserControllerTest {
 
 
     @Test
-    void validationExceptionEmailUser() {
+    void validationExceptionNullEmailUser() {
         user.setEmail(null);
+        ValidationException ex = assertThrows(
+
+                ValidationException.class,
+                () -> userController.createUser(user)
+        );
+        assertEquals("Адрес электронной почты не может быть пустым.", ex.getMessage());
+
+    }
+
+    @Test
+    void validationExceptionEmailUser() {
+        user.setEmail("");
+        ValidationException ex = assertThrows(
+
+                ValidationException.class,
+                () -> userController.createUser(user)
+        );
+        assertEquals("Адрес электронной почты не может быть пустым.", ex.getMessage());
+
+    }
+
+    @Test
+    void validationExceptionTrimEmailUser() {
+        user.setEmail("      ");
         ValidationException ex = assertThrows(
 
                 ValidationException.class,
@@ -71,8 +95,19 @@ public class UserControllerTest {
     }
 
     @Test
-    void validationExceptionNullLoginUser() {
+    void validationExceptionLoginUser() {
         user.setLogin("");
+        ValidationException ex = assertThrows(
+
+                ValidationException.class,
+                () -> userController.createUser(user)
+        );
+        assertEquals("Логин не может быть пустым.", ex.getMessage());
+    }
+
+    @Test
+    void validationExceptionNullLoginUser() {
+        user.setLogin(null);
         ValidationException ex = assertThrows(
 
                 ValidationException.class,

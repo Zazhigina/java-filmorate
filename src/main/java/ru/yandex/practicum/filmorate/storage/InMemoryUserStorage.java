@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
@@ -26,7 +25,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void modificationUser(User user) throws ValidationException {
+    public void modificationUser(User user) {
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
             log.info("Пользователь с id {} обновлен. Пользователь: {}", user.getId(), user);
@@ -75,13 +74,13 @@ public class InMemoryUserStorage implements UserStorage {
     public void removeFromFriends(int userId, int friendId) {
         for (User user : getUsers()) {
             if (userId == user.getId()) {
-                user.getFriends().remove(userId);
+                user.getFriends().remove(friendId);
             }
         }
 
         for (User user : getUsers()) {
             if (friendId == user.getId()) {
-                user.getFriends().remove(friendId);
+                user.getFriends().remove(userId);
             }
         }
     }
@@ -104,10 +103,13 @@ public class InMemoryUserStorage implements UserStorage {
         if (otherUser.isPresent()) {
             friendsOfOtherUser = otherUser.get().getFriends();
         }
-        for (Integer commonUser : friendsOfUser) {
-            if (friendsOfOtherUser.contains(commonUser)) {
-                Optional<User> userById = getUserById(commonUser);
-                userById.ifPresent(commonFriends::add);
+        if (!(Collections.disjoint(friendsOfUser, friendsOfOtherUser))) {
+
+            for (Integer commonUser : friendsOfUser) {
+                if (friendsOfOtherUser.contains(commonUser)) {
+                    Optional<User> userById = getUserById(commonUser);
+                    userById.ifPresent(commonFriends::add);
+                }
             }
         }
         return commonFriends;
