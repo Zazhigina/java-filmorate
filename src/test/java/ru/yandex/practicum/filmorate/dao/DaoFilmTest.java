@@ -32,6 +32,7 @@ public class DaoFilmTest {
     private final UserDbStorage userStorage;
     private Film film;
     private User user;
+
     @BeforeEach
     public void init() {
         Set<Genre> genres = new HashSet<>();

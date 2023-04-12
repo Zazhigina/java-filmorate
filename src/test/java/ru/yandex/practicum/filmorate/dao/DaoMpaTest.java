@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class DaoMpaTest {
     private final MpaDbStorage mpaDbStorage;
+
     @Test
     public void testGetGenre() {
 
