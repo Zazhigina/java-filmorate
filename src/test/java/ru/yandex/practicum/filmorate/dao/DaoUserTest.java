@@ -65,7 +65,7 @@ public class DaoUserTest {
     public void create() {
         User addedUser = userStorage.addUser(user);
 
-        assertEquals(addedUser.getId(), 1);
+        assertEquals(addedUser.getId(), 5);
         assertEquals(addedUser.getName(), "user name");
         assertEquals(addedUser.getLogin(), "user login");
         assertEquals(addedUser.getEmail(), "user@mail.com");
