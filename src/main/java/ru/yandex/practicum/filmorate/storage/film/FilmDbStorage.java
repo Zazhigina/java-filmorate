@@ -29,13 +29,13 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getFilms() {
-        String sql = "SELECT f.id_film, f.name, f.description, f.release_date, f.duration, f.rate, f.mpa, m.id_mpa, m.name  " +
+        String sql = "SELECT f.id_film, f.name, f.description, f.release_date, f.duration, f.rate, f. mpa ,m.id_mpa, m.name_mpa " +
                 "FROM films f LEFT JOIN mpa m ON f.mpa = m.id_mpa";
 
         List<Film> films = jdbcTemplate.query(sql, filmMapper);
 
         for (Film film : films) {
-            film.setMpa(getMpaById(film.getId()));
+            film.setMpa(film.getMpa());
             film.setGenres(getGenresById(film.getId()));
             film.setLikes(getLikesByFilmId(film.getId()));
         }
@@ -110,11 +110,11 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Optional<Film> getFilmById(int filmId) {
-        String sql = "SELECT f.id_film, f.name, f.description, f.release_date, f.duration, f.rate, f.mpa " +
-                " FROM films f WHERE id_film = ?";
+        String sql = "SELECT f.id_film, f.name, f.description, f.release_date, f.duration, f.rate, f. mpa ,m.id_mpa, m.name_mpa " +
+                "FROM films f LEFT JOIN mpa m ON f.mpa = m.id_mpa WHERE id_film = ?";
 
         Optional<Film> film = Optional.ofNullable(jdbcTemplate.queryForObject(sql, filmMapper, filmId));
-        film.ifPresent(value -> value.setMpa(getMpaById(filmId)));
+        film.ifPresent(value -> value.setMpa(film.get().getMpa()));
         film.ifPresent(value -> value.setGenres(getGenresById(filmId)));
         film.ifPresent(value -> value.setLikes(getLikesByFilmId(filmId)));
         return film;
@@ -168,7 +168,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private Mpa getMpaById(int filmId) {
-        String mpaSql = "SELECT m.id_mpa, m.name FROM mpa m " +
+        String mpaSql = "SELECT m.id_mpa, m.name_mpa FROM mpa m " +
                 "JOIN films f ON f.mpa = m.id_mpa " +
                 "WHERE f.id_film = ?";
 

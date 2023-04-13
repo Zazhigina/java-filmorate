@@ -1,21 +1,21 @@
 package ru.yandex.practicum.filmorate.storage.genre;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.storage.mpa.MpaDbStorage;
+
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class GenreDbStorage implements GenreStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private final Logger log = LoggerFactory.getLogger(MpaDbStorage.class);
     private final GenreMapper genreMapper;
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate, GenreMapper genreMapper) {

@@ -25,18 +25,18 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> getMpas() {
-        String sql = "SELECT m.id_mpa, m.name FROM mpa m ORDER BY id_mpa";
+        String sql = "SELECT m.id_mpa, m.name_mpa FROM mpa m ORDER BY id_mpa";
 
         return jdbcTemplate.query(sql, mpaMapper);
     }
 
     @Override
     public Optional<Mpa> getMpaById(int id) {
-        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet("SELECT m.id_mpa, m.name FROM mpa m WHERE id_mpa = ?", id);
+        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet("SELECT m.id_mpa, m.name_mpa FROM mpa m WHERE id_mpa = ?", id);
         if (mpaRows.next()) {
             Mpa mpa = new Mpa(
                     mpaRows.getInt("id_mpa"),
-                    mpaRows.getString("name")
+                    mpaRows.getString("name_mpa")
             );
             log.info("MPA найден: {} {}", mpa.getId(), mpa.getName());
             return Optional.of(mpa);
