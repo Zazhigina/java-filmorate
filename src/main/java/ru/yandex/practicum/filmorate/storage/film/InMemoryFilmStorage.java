@@ -1,9 +1,9 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
@@ -36,7 +36,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             return film;
         } else {
             log.debug("Ошибка обновления фильма: попытка обновления фильма с id {}.", film.getId());
-            throw new FilmNotFoundException(String.format("Фильм с id: %s не найден!", film.getId()));
+            throw new NotFoundException(String.format("Фильм с id: %s не найден!", film.getId()));
         }
     }
 
@@ -50,7 +50,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             return Optional.ofNullable(films.get(filmId));
         } else {
             log.debug("Ошибка при получении фильма по id {} его не существует.", filmId);
-            throw new FilmNotFoundException(String.format("Фильм с id: %s не найден!", filmId));
+            throw new NotFoundException(String.format("Фильм с id: %s не найден!", filmId));
         }
     }
 

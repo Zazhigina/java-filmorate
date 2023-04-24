@@ -1,30 +1,44 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
-public class FilmStorageTest {
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+public class DaoFilmTest {
 
-    private final FilmStorage filmStorage = new InMemoryFilmStorage();
-    private final UserStorage userStorage = new InMemoryUserStorage();
-
+    private final FilmDbStorage filmStorage;
+    private final UserDbStorage userStorage;
     private Film film;
     private User user;
 
     @BeforeEach
     public void init() {
+        Set<Genre> genres = new HashSet<>();
+        genres.add(new Genre(1, null));
+        genres.add(new Genre(2, null));
+        genres.add(new Genre(3, null));
 
         film = Film.builder()
                 .id(1)
@@ -32,6 +46,8 @@ public class FilmStorageTest {
                 .description("film description")
                 .releaseDate(LocalDate.of(2000, 1, 1))
                 .duration(100)
+                .mpa(new Mpa(4, null))
+                .genres(genres)
                 .build();
 
         user = User.builder()
@@ -42,6 +58,7 @@ public class FilmStorageTest {
                 .birthday(LocalDate.of(2010, 7, 19))
                 .build();
     }
+
 
     @Test
     public void testGetFilms() {
@@ -55,7 +72,7 @@ public class FilmStorageTest {
     public void testCreateFilm() {
         Film addedFilm = filmStorage.addFilm(film);
 
-        assertEquals(addedFilm.getId(), 1);
+        assertEquals(addedFilm.getId(), 4);
         assertEquals(addedFilm.getName(), "film name");
         assertEquals(addedFilm.getDescription(), "film description");
         assertEquals(addedFilm.getReleaseDate(), LocalDate.of(2000, 1, 1));

@@ -5,13 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import org.springframework.util.StringUtils;
-import ru.yandex.practicum.filmorate.exceptions.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,7 +37,7 @@ public class FilmService {
         validation(film);
         if (filmNotExists(film.getId())) {
             log.error("user service получает фильм по ошибке: film с id {} не найден.", film.getId());
-            throw new FilmNotFoundException(String.format("Фильм с id: %s не найден!", film.getId()));
+            throw new NotFoundException(String.format("Фильм с id: %s не найден!", film.getId()));
         }
         return filmStorage.modificationFilm(film);
     }
@@ -46,7 +45,7 @@ public class FilmService {
     public Optional<Film> getFilmById(int filmId) {
         if (filmNotExists(filmId)) {
             log.error("film service получает фильм по ошибке: film с id {} не найден!", filmId);
-            throw new FilmNotFoundException(String.format("Фильм с id: %s не найден!", filmId));
+            throw new NotFoundException(String.format("Фильм с id: %s не найден!", filmId));
         }
         return filmStorage.getFilmById(filmId);
     }
@@ -120,11 +119,11 @@ public class FilmService {
     private void validateFilmAndUser(int filmId, int userId) {
         if (filmNotExists(filmId)) {
             log.error("user service получает фильм по ошибке: film с id {} не найден.", filmId);
-            throw new FilmNotFoundException(String.format("Фильм с id: %s не найден!", filmId));
+            throw new NotFoundException(String.format("Фильм с id: %s не найден!", filmId));
         }
         if (!userExists(userId)) {
             log.error("user service получает пользователя по ошибке: user с id {} не найден.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
     }
 

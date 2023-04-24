@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,12 +23,12 @@ public class UserService {
     public void addToFriends(int userId, int friendId) throws ValidationException {
         if (userNotExists(userId)) {
             log.error("Ошибка в user service при добавлении в список друзей:" + " пользователь с id {} не найден.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
 
         if (userNotExists(friendId)) {
             log.error("Ошибка в user service при добавлении в список друзей:" + " пользователь с id {} не найден.", friendId);
-            throw new UserNotFoundException(String.format("Пользователь id: %s не найден!", friendId));
+            throw new NotFoundException(String.format("Пользователь id: %s не найден!", friendId));
         }
 
         if (userId == friendId) {
@@ -47,17 +47,17 @@ public class UserService {
     public void removeFromFriends(int userId, int friendId) {
         if (userNotExists(userId)) {
             log.error("Ошибка в user service при удалении из списка друзей: пользователь с id {} не найден.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
 
         if (userNotExists(friendId)) {
             log.error("Ошибка в user service при удалении из списка друзей: пользователь с id {} не найден.", friendId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", friendId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", friendId));
         }
 
         if (userId == friendId) {
             log.debug("пытается удалить пользователей с таким же id в список друзей: id {}", userId);
-            throw new UserNotFoundException(String.format("Пользователь не может сам себя удалить из друзей," + " id: %s", userId));
+            throw new NotFoundException(String.format("Пользователь не может сам себя удалить из друзей," + " id: %s", userId));
         }
         userStorage.removeFromFriends(userId, friendId);
     }
@@ -66,7 +66,7 @@ public class UserService {
 
         if (userNotExists(userId)) {
             log.error("user service получает пользователя по ошибке: user с id {} не найден.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
 
         return userStorage.getFriends(userId);
@@ -75,12 +75,12 @@ public class UserService {
     public List<User> getCommonFriends(int userId, int otherId) throws ValidationException {
         if (userNotExists(userId)) {
             log.error("user service получает пользователя по ошибке: user с id {} не найден.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
 
         if (userNotExists(otherId)) {
             log.error("user service получает пользователя по ошибке: user с id {} не найден.", otherId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", otherId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", otherId));
         }
 
         if (userId == otherId) {
@@ -100,7 +100,7 @@ public class UserService {
         validation(user);
         if (userNotExists(user.getId())) {
             log.error("user service получает пользователя по ошибке: user с id {} не найден.", user.getId());
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", user.getId()));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", user.getId()));
         }
         userStorage.modificationUser(user);
     }
@@ -112,7 +112,7 @@ public class UserService {
     public Optional<User> getUserById(int userId) {
         if (userNotExists(userId)) {
             log.error("user service получает пользователя по ошибке: user с id {} не найден.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
 
         return userStorage.getUserById(userId);

@@ -1,9 +1,13 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.dao;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.UserDbStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,11 +17,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class UserStorageTest {
+@AutoConfigureTestDatabase
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+public class DaoUserTest {
 
-
-    private final UserStorage userStorage = new InMemoryUserStorage();
-
+    private final UserDbStorage userStorage;
     private User user;
     private User friend;
     private User commonFriend;
@@ -61,7 +65,7 @@ public class UserStorageTest {
     public void create() {
         User addedUser = userStorage.addUser(user);
 
-        assertEquals(addedUser.getId(), 1);
+        assertEquals(addedUser.getId(), 5);
         assertEquals(addedUser.getName(), "user name");
         assertEquals(addedUser.getLogin(), "user login");
         assertEquals(addedUser.getEmail(), "user@mail.com");
@@ -83,18 +87,19 @@ public class UserStorageTest {
                 );
     }
 
+
     @Test
-    public void testGetUserById() {
-        User addedUser = userStorage.addUser(user);
+    public void testFindUserById() {
 
-        Optional<User> userFormDb = userStorage.getUserById(addedUser.getId());
+        Optional<User> userOptional = userStorage.getUserById(1);
 
-        assertThat(userFormDb)
+        assertThat(userOptional)
                 .isPresent()
                 .hasValueSatisfying(user ->
-                        assertThat(user).hasFieldOrPropertyWithValue("id", addedUser.getId())
+                        assertThat(user).hasFieldOrPropertyWithValue("id", 1)
                 );
     }
+
 
     @Test
     public void testGetUserFriends() {
@@ -152,5 +157,4 @@ public class UserStorageTest {
 
         assertEquals(noFriends.size(), 0);
     }
-
 }

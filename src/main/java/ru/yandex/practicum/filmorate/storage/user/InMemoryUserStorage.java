@@ -1,8 +1,8 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.UserNotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
@@ -25,13 +25,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void modificationUser(User user) {
+    public User modificationUser(User user) {
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
             log.info("Пользователь с id {} обновлен. Пользователь: {}", user.getId(), user);
+            return user;
         } else {
             log.debug("Ошибка обновления пользователя: попытка обновления пользователя с id {}.", user.getId());
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", user.getId()));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", user.getId()));
         }
     }
 
@@ -41,7 +42,7 @@ public class InMemoryUserStorage implements UserStorage {
             return Optional.ofNullable(users.get(userId));
         } else {
             log.debug("Ошибка при получении пользователя по id {} его не существует.", userId);
-            throw new UserNotFoundException(String.format("Пользователь с id: %s не найден!", userId));
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден!", userId));
         }
     }
 
